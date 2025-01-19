@@ -1,0 +1,27 @@
+{
+    "door_dimensions": {
+      "min_width": 0.8,
+      "max_width": 1.2,
+      "recommendation": "Doors should be at least 0.8m wide for accessibility."
+    },
+    "ceiling_height": {
+      "min_height": 2.5,
+      "recommendation": "Ceilings should be at least 2.5m high for comfort."
+    },
+    "room_size": {
+      "min_area": 9.0,
+      "recommendation": "Rooms should be at least 9m² to meet minimum standards."
+    },
+    "staircases": {
+      "step_height": {
+        "min": 0.15,
+        "max": 0.18,
+        "recommendation": "Steps should be between 15cm and 18cm high."
+      },
+      "step_depth": {
+        "min": 0.28,
+        "recommendation": "Step depth should be at least 28cm."
+      }
+    }
+  }
+  

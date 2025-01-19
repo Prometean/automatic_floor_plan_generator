@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistente de Arquitectura</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        header {
+            background-color: #2b7a78;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        section {
+            margin-bottom: 2rem;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        textarea, input[type="file"] {
+            width: 100%;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #2b7a78;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background-color: #205753;
+        }
+
+        img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .output {
+            margin-top: 1rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: #2b7a78;
+            color: white;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Asistente de Arquitectura</h1>
+        <p>Genera renders, refina bocetos y responde preguntas arquitectónicas</p>
+    </header>
+    <main>
+        <!-- Generar Render -->
+        <section>
+            <h2>1. Generar Render con Distribución de Espacios</h2>
+            <form id="promptForm">
+                <label for="prompt">Describe tu proyecto:</label>
+                <textarea id="prompt" rows="4" placeholder="Ejemplo: Una casa moderna con techos altos, grandes ventanales y un jardín..."></textarea>
+                <button type="submit">Generar</button>
+            </form>
+            <div id="generateOutput" class="output">
+                <h3>Resultado:</h3>
+                <p id="generatedText"></p>
+                <img id="generatedImage" alt="El render generado aparecerá aquí">
+            </div>
+        </section>
+
+        <!-- Refinar Boceto -->
+        <section>
+            <h2>2. Cargar y Refinar Boceto</h2>
+            <form id="uploadForm">
+                <label for="fileInput">Sube tu imagen:</label>
+                <input type="file" id="fileInput" accept="image/*" required>
+                <button type="submit">Refinar</button>
+            </form>
+            <div id="uploadOutput" class="output">
+                <h3>Boceto Refinado:</h3>
+                <img id="refinedImage" alt="El boceto refinado aparecerá aquí">
+            </div>
+        </section>
+
+        <!-- Preguntar al Asistente -->
+        <section>
+            <h2>3. Preguntar al Asistente</h2>
+            <form id="askForm">
+                <label for="question">Escribe tu pregunta:</label>
+                <textarea id="question" rows="4" placeholder="Ejemplo: ¿Cuáles son las dimensiones ideales para una sala de estar moderna?"></textarea>
+                <button type="submit">Preguntar</button>
+            </form>
+            <div id="askOutput" class="output">
+                <h3>Respuesta:</h3>
+                <p id="answer"></p>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Asistente de Arquitectura. Todos los derechos reservados.</p>
+    </footer>
+    <script>
+        // Generar Render con Distribución de Espacios
+        document.getElementById('promptForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const prompt = document.getElementById('prompt').value;
+
+            const response = await fetch('/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById('generatedText').innerText = data.text;
+                document.getElementById('generatedImage').src = data.image_url;
+            } else {
+                alert('Error al generar el contenido.');
+            }
+        });
+
+        // Cargar y Refinar Boceto
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fileInput = document.getElementById('fileInput').files[0];
+            const formData = new FormData();
+            formData.append('file', fileInput);
+
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById('refinedImage').src = data.refined_image_url;
+            } else {
+                alert('Error al refinar el boceto.');
+            }
+        });
+
+        // Preguntar al Asistente
+        document.getElementById('askForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const question = document.getElementById('question').value;
+
+            const response = await fetch('/ask', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ question })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById('answer').innerText = data.answer;
+            } else {
+                alert('Error al procesar la pregunta.');
+            }
+        });
+    </script>
+</body>
+</html>
